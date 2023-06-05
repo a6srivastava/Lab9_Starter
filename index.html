@@ -86,8 +86,22 @@
       <button>Trigger a Global Error</button>
     </section>
   </main>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "3f6321b7386843f8a0344fe5cd0374bd"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
+                          
 
   <script>
+    class InputError extends Error {
+      constructor(message) {
+        super(message); 
+        this.name = "InputError"; 
+      }
+    }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -96,12 +110,103 @@
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      if (firstNum == "" || secondNum == "") {
+        throw new InputError("Input is empty error")
+      }
+      if ((secondNum == 0) && (operator == '/')) {
+        throw new InputError("Divide by zero error")
+      }
+      try {
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      }
+      catch(err){
+        throw new InputError("Invalid input")
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    errorBtns[0].addEventListener('click', () => {
+      console.log('Console Log Demo');
+    });
+    errorBtns[1].addEventListener('click', () => {
+      console.error('Console Error Demo');
+    });
+    errorBtns[2].addEventListener('click', () => {
+      console.count('Console Count Demo');
+    });
+    errorBtns[3].addEventListener('click', () => {
+      console.warn('Console Warn Demo');
+    });
+    errorBtns[4].addEventListener('click', () => {
+      console.assert(false, 'Console Assert Demo');
+    });
+    errorBtns[5].addEventListener('click', () => {
+      console.clear();
+    });
+    errorBtns[6].addEventListener('click', () => {
+      console.log('Console Dir Demo')
+      console.dir(document.body);
+    });
+    errorBtns[7].addEventListener('click', () => {
+      console.log('Console Dirxml Demo')
+      console.dirxml(document.body);
+    });
+    errorBtns[8].addEventListener('click', () => {
+      console.group('Console Group Start Demo');
+    });
+    errorBtns[9].addEventListener('click', () => {
+      console.groupEnd();
+    });
+    errorBtns[10].addEventListener('click', () => {
+      console.table([{
+        name: 'Bob',
+        age: 20
+      }, {
+        name: 'Joe',
+        age: 18
+      }, {
+        name: 'Jane', 
+        age: 19 
+      }
+    ]);
+    });
+    errorBtns[11].addEventListener('click', () => {
+      console.time('Console Timer Demo');
+    });
+    errorBtns[12].addEventListener('click', () => {
+      console.timeEnd('Console Timer Demo');
+    });
+    errorBtns[13].addEventListener('click', () => {
+      const track = () => {
+        track1();
+      }
+      const track1 = () => {
+        track2();
+      }
+      const track2 = () => {
+        track3();
+      }
+      const track3 = () => {
+        console.trace('Console Trace Demo');
+      }
+      track();
+    });
+    window.onerror = function(message, url, lineNo, columnNo, error) {
+    console.log('Error: ' + message);
+    console.log('URL: ' + url);
+    console.log('Line: ' + lineNo);
+    console.log('Column: ' + columnNo);
+    console.log('Error object: ' + JSON.stringify(error));
+    return false;
+    }
+
+    errorBtns[14].addEventListener('click', () => {
+        // This will cause a ReferenceError since undefinedFunction is not defined
+        undefinedFunction();
+    });
   </script>
 </body>
 
