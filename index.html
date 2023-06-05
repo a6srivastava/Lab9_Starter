@@ -109,17 +109,19 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      //output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
       if (firstNum == "" || secondNum == "") {
         throw new InputError("Input is empty error")
       }
       if ((secondNum == 0) && (operator == '/')) {
+        output.innerHTML = "Divide by zero error";
         throw new InputError("Divide by zero error")
       }
       try {
         output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
       }
       catch(err){
+        output.innerHTML = "Invalid input";
         throw new InputError("Invalid input")
       }
     });
